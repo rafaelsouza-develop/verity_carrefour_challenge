@@ -17,9 +17,6 @@
         android:theme="@style/Theme.GithubRepos"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.repos.ReposActivity"
-            android:exported="false" />
-        <activity
             android:name=".presentation.MainActivity"
             android:exported="true">
             <intent-filter>

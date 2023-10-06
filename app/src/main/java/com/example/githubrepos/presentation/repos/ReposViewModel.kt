@@ -33,7 +33,7 @@ class ReposViewModel(private val repository: UsersRepository) : ViewModel() {
                         _viewState.value = ReposViewState.ReposEmpty
                     } else {
                         repos = it
-                        _viewState.value = ReposViewState.RepossLoaded(it)
+                        _viewState.value = ReposViewState.ReposLoaded(it)
                     }
                 }
         }

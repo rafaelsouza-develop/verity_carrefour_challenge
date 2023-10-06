@@ -1,95 +1,96 @@
-package com.example.githubrepos.presentation.home
+package com.example.githubrepos.presentation.repos
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.githubrepos.R
-import com.example.githubrepos.databinding.FragmentHomeBinding
-import com.example.githubrepos.domain.model.User
+import com.example.githubrepos.databinding.FragmentReposBinding
+import com.example.githubrepos.domain.model.Repos
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment(), HomeAdapter.UserAdapterListner {
 
-    private val viewModel: HomeViewModel by viewModel()
-    private lateinit var binding: FragmentHomeBinding
+class ReposFragment : Fragment() {
+
+    private val viewModel: ReposViewModel by viewModel()
+    private lateinit var binding: FragmentReposBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(requireActivity(), R.layout.fragment_home)
+        binding = DataBindingUtil.setContentView(requireActivity(), R.layout.fragment_repos)
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_repos, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupObservables(viewModel)
-        viewModel.dispatcherViewAction(HomeViewAction.GetUsers)
+        viewModel.dispatcherViewAction(ReposViewAction.GetRepos(""))
     }
-    private fun setupObservables(viewModel: HomeViewModel) {
+
+    private fun setupObservables(viewModel: ReposViewModel) {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
             when (viewState) {
-                is HomeViewState.UsersLoaded -> {
+                is ReposViewState.ReposLoaded -> {
                     showSucessState()
-                    setRecyclerViewList(viewState.movies)
+                    setRecyclerViewList(viewState.repos)
                 }
 
-                HomeViewState.Loading -> {
+                ReposViewState.Loading -> {
                     showLoadingState()
                 }
 
-                is HomeViewState.UsersLoadFailure -> {
+                is ReposViewState.ReposLoadFailure -> {
                     goToErrorView()
                 }
 
-                HomeViewState.UsersEmpty -> {
+                ReposViewState.ReposEmpty -> {
                     goToEmptyView()
                 }
             }
         }
     }
 
-    private fun goToEmptyView() {
-        findNavController().navigate(R.id.action_homeFragment_to_emptyFragment)
-    }
-
     private fun goToErrorView() {
-        findNavController().navigate(R.id.action_homeFragment_to_errorFragment)
+        findNavController().navigate(R.id.action_reposFragment_to_errorFragment)
     }
 
-    private fun setRecyclerViewList(users: List<User>) {
-        binding.rvUsers.apply {
+    private fun goToEmptyView() {
+        findNavController().navigate(R.id.action_reposFragment_to_emptyFragment)
+    }
+
+    private fun setRecyclerViewList(repos: List<Repos>) {
+        binding.rvRepos.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = HomeAdapter(users)
+            adapter = ReposAdapter(repos)
         }
-    }
-
-    override fun goToReposList(user: User) {
-
-        findNavController().navigate(R.id.action_homeFragment_to_reposFragment)
     }
 
     private fun showLoadingState() {
         with(binding) {
-            rvUsers.visibility = View.GONE
+            rvRepos.visibility = View.GONE
             containerLoadingState.visibility = View.VISIBLE
         }
     }
 
     private fun showSucessState() {
         with(binding) {
-            rvUsers.visibility = View.VISIBLE
+            rvRepos.visibility = View.VISIBLE
             containerLoadingState.visibility = View.GONE
         }
     }
+
 }

@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.example.githubrepos.databinding.ItemUserBinding
 import com.example.githubrepos.domain.model.User
 
-class HomeAdapter(private val movies: List<User>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(private val users: List<User>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -15,10 +15,10 @@ class HomeAdapter(private val movies: List<User>) : RecyclerView.Adapter<HomeAda
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(movies[position])
+        holder.bind(users[position])
     }
 
-    override fun getItemCount() = movies.size
+    override fun getItemCount() = users.size
 
     class ViewHolder(private val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: User) {
@@ -32,5 +32,9 @@ class HomeAdapter(private val movies: List<User>) : RecyclerView.Adapter<HomeAda
                     .into(imgCover)
             }
         }
+    }
+
+    interface UserAdapterListner{
+        fun goToReposList(user:User)
     }
 }
